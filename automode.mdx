@@ -1,0 +1,161 @@
+---
+title: "Auto-Mode API"
+description: "Auto-Mode eliminates the guesswork from model selection by automatically choosing the optimal AI model for each query. "
+---
+
+# How Auto-Mode Works
+
+### **Content Analysis**
+
+Auto-Mode examines multiple dimensions of your request:
+
+- **Code Detection**: Programming keywords, syntax patterns, language mentions
+- **Mathematical Content**: Equations, formulas, calculation requests
+- **Creative Requests**: Story writing, artistic content, imaginative tasks
+- **Complexity Assessment**: Technical depth, reasoning requirements, context length
+- **Query Type**: Simple questions vs. complex multi-step analysis
+
+Each model in our ecosystem has a **detailed capability profile**. Auto-Mode weighs these capabilities against your query characteristics to find the optimal match\!
+
+# Using Auto-Mode
+
+## Basic Usage
+
+```javascript
+const response = await fetch('https://api.answerr.ai/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${YOUR_API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: "auto",  // That's it!
+    messages: [
+      {
+        role: "user",
+        content: "Debug this Python function and explain what's wrong"
+      }
+    ]
+  })
+});
+```
+
+## When Auto-Mode Excels
+
+### **Development Teams**
+
+Auto-Mode is perfect for teams building diverse applications where different queries require different AI strengths. Instead of maintaining complex routing logic, let Auto-Mode handle the decisions while your team focuses on building features.
+
+### **Customer Support**
+
+Support tickets vary wildly—from simple FAQ responses to complex technical troubleshooting. Auto-Mode routes simple questions to fast, cost-effective models while escalating complex issues to premium models with stronger reasoning capabilities.
+
+### **Educational Platforms**
+
+Students ask questions across every subject imaginable. Auto-Mode sends math problems to models with strong quantitative reasoning, programming questions to code-specialized models, and essay assistance to models with creative writing strengths.
+
+### **Content Creation Tools**
+
+Whether users want technical documentation, creative stories, or marketing copy, Auto-Mode selects the model best suited for each creative task, optimizing both quality and cost.
+
+### **Research Applications**
+
+Academic and business research involves diverse query types—from data analysis to literature review to hypothesis generation. Auto-Mode adapts to each research phase automatically.
+
+## **Business Benefits**
+
+### **Cost Optimization**
+
+Auto-Mode typically reduces API costs by 30-60% compared to always using premium models. It uses expensive models only when their capabilities are truly needed, routing simpler queries to more affordable options without sacrificing quality.
+
+### **Performance Optimization**
+
+By matching queries to each model's strengths, Auto-Mode often delivers better results than any single-model approach. Users get responses optimized for their specific needs rather than generic outputs.
+
+### **Reduced Complexity**
+
+No need to learn the nuances of each model, create routing logic, or maintain selection rules as models evolve. Auto-Mode handles all the complexity behind a simple parameter change.
+
+### **Future-Proof Architecture**
+
+As new models are added to the AnswerrAI ecosystem, Auto-Mode automatically incorporates them into its selection process. Your application benefits from new capabilities without code changes.
+
+## Advanced Features
+
+### Auto-Mode with Compare
+
+Combine Auto-Mode with Compare functionality to see how the automatically selected model performs against alternatives:
+
+```javascript
+{
+  "model": "auto",
+  "compareModel": "gpt-4o",
+  "messages": [...]
+}
+```
+
+This lets you validate Auto-Mode's selections and understand when manual model choice might be beneficial.
+
+### **Selection Preferences**
+
+Enterprise customers can customize Auto-Mode's selection criteria:
+
+- **Cost-optimized**: Favor more affordable models when quality differences are minimal
+- **Performance-optimized**: Prioritize response quality over cost considerations
+- **Speed-optimized**: Prefer faster models for real-time applications
+- **Custom weighting**: Define specific priorities for your use case
+
+# Implementation Example
+
+```javascript
+class AnswerrAI {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+    this.baseURL = 'https://api.answerr.ai/v1';
+  }
+
+  async chat(messages, options = {}) {
+    const response = await fetch(`${this.baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: options.model || 'auto',  // Default to Auto-Mode
+        messages,
+        temperature: options.temperature || 0.7,
+        ...options
+      })
+    });
+
+    const result = await response.json();
+    
+    // Log Auto-Mode selection for analytics
+    if (result.model_selection) {
+      console.log(`Auto-Mode selected: ${result.model}`);
+      console.log(`Reasoning: ${result.model_selection.reasoning}`);
+    }
+
+    return result;
+  }
+}
+
+// Usage
+const ai = new AnswerrAI(process.env.ANSWERR_API_KEY);
+
+// Auto-Mode handles model selection
+const response = await ai.chat([
+  { role: 'user', content: 'Explain quantum computing to a 10-year-old' }
+]);
+```
+
+# Next Steps
+
+Ready to implement intelligent model selection? Auto-Mode works with all AnswerrAI features:
+
+- Compare Mode - Compare Auto-Mode selections with specific models
+- File Analysis - Auto-Mode works with document and image analysis
+- Sources & Suggestions - Enhanced responses with intelligent model selection
+
+Start using Auto-Mode today by simply changing your model parameter to `"auto"`. Your applications will immediately benefit from optimized model selection without any additional integration work.
