@@ -1,0 +1,242 @@
+
+
+---
+title: "File Analysis API"
+description: "The File Analysis API brings AI understanding to your documents, images, and text files. Instead of just extracting raw content, our system comprehends meaning, answers questions, and generates insights across multiple file formats using state-of-the-art models from OpenAI and Anthropic."
+---
+
+## **Supported File Types**
+
+### **Documents**
+
+- **PDF (.pdf)** - Advanced text extraction with layout preservation
+- **Word (.docx)** - Structure-aware content processing
+- **Excel (.xlsx)** - Intelligent spreadsheet analysis and data interpretation
+
+### **Images**
+
+- **PNG, JPEG** - Visual content analysis using advanced vision models
+- Text extraction from screenshots and scanned documents
+- Chart and diagram interpretation
+
+### **Text Files**
+
+- **Code files** (.js, .py, .java, etc.) - Syntax-aware analysis and review
+- **Markup** (.html, .md, .xml) - Structure-preserving processing
+- **Configuration** (.json, .yml, .csv) - Format-specific parsing
+
+## **Basic Usage**
+
+### **Document Analysis**
+
+```javascript
+const response = await fetch('https://api.answerr.ai/v1/analysis/files', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${YOUR_API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    files: [{
+      url: 'https://storage.example.com/contract.pdf',
+      mimeType: 'application/pdf',
+      name: 'contract.pdf'
+    }],
+    input: [
+      { 
+        role: 'user', 
+        content: 'What are the key terms and any concerning clauses in this contract?' 
+      }
+    ],
+    model: 'claude-3-5-sonnet',
+    userId: 'user123',
+    chatId: 'chat456',
+    msgId: 'msg789'
+  })
+});
+```
+
+### **Multi-File Analysis**
+
+```javascript
+{
+  "files": [
+    {
+      "url": "https://storage.example.com/report_q1.pdf",
+      "mimeType": "application/pdf", 
+      "name": "Q1_Report.pdf"
+    },
+    {
+      "url": "https://storage.example.com/report_q2.pdf",
+      "mimeType": "application/pdf",
+      "name": "Q2_Report.pdf"
+    }
+  ],
+  "input": [
+    {
+      "role": "user",
+      "content": "Compare the financial performance between Q1 and Q2 reports"
+    }
+  ],
+  "model": "gpt-4o"
+}
+```
+
+## **Processing Intelligence**
+
+### **Automatic Type Detection**
+
+The API intelligently routes each file to specialized processors:
+
+- **Images** → Vision-enabled AI analysis
+- **Documents** → Format-specific extraction with context preservation
+- **Text files** → Syntax-aware parsing and semantic understanding
+
+### **Content Extraction**
+
+- **PDFs**: Layout-aware text extraction maintaining document structure
+- **Word docs**: Formatting context preservation with clean text rendering
+- **Spreadsheets**: Smart table recognition with header identification
+- **Images**: OCR combined with visual understanding for comprehensive analysis
+
+### **AI Integration**
+
+Processed content integrates seamlessly with our model ecosystem. Each model brings unique strengths—OpenAI excels at technical documents and code, while Claude provides superior analysis of complex legal and business documents.
+
+## **Advanced Features**
+
+### **Compare Mode with Files**
+
+Compare how different models interpret the same documents:
+
+```javascript
+{
+  "model": "gpt-4o",
+  "compareModel": "claude-3-5-sonnet",
+  "files": [{"url": "technical_spec.pdf", "mimeType": "application/pdf"}],
+  "input": [{"role": "user", "content": "Extract the technical requirements"}]
+}
+```
+
+### **Conversation Context**
+
+Build on previous file analysis with follow-up questions:
+
+```javascript
+// Initial analysis
+const firstResponse = await analyzeFile(document, "Summarize this research paper");
+
+// Follow-up questions maintain context
+const followUp = await analyzeFile(document, "What methodology did they use?");
+const deeper = await analyzeFile(document, "How does this compare to industry standards?");
+```
+
+## **Business Applications**
+
+### **Legal Document Review**
+
+Law firms use File Analysis to extract key clauses, identify risks, compare contracts against standards, and answer specific questions about legal documents without manual page-by-page review.
+
+### **Financial Analysis**
+
+Analyze earnings reports, financial statements, and market research. Extract projections, compare quarterly results, identify trends, and generate executive summaries from dense financial documentation.
+
+### **Technical Documentation**
+
+Engineering teams query complex specifications, extract implementation requirements, analyze code repositories, and compare different versions of technical documents to identify changes and implications.
+
+### **Research and Academia**
+
+Researchers analyze academic papers, extract methodologies and findings, compare approaches across publications, and identify trends without reading every word of dense technical content.
+
+### **Content Management**
+
+Marketing and communications teams analyze brand guidelines, extract key messaging, compare content strategies, and ensure consistency across large document libraries.
+
+## **Processing Limits and Optimization**
+
+### **File Constraints**
+
+- **Maximum 5 files** per request for optimal processing
+- **Document processing**: Up to 90,000 tokens (≈67,500 words)
+- **Text file processing**: Up to 40,000 tokens (≈30,000 words)
+- **File size**: Content-based limits ensure reliable processing
+
+### **Performance Features**
+
+- **Batch processing**: Analyze multiple related files in a single request
+- **Cross-file analysis**: Identify relationships and differences between documents
+- **Token optimization**: Intelligent content prioritization within model limits
+- **Format preservation**: Maintain critical structure and formatting context
+
+# Integration Example
+
+```javascript
+class FileAnalyzer {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+    this.baseURL = 'https://api.answerr.ai/v1';
+  }
+
+  async analyzeFiles(files, query, options = {}) {
+    const response = await fetch(`${this.baseURL}/analysis/files`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        files,
+        input: [{ role: 'user', content: query }],
+        model: options.model || 'auto',
+        compareModel: options.compareModel,
+        includeSources: options.includeSources || false,
+        userId: options.userId,
+        chatId: options.chatId || this.generateChatId(),
+        msgId: options.msgId || this.generateMsgId()
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Analysis failed: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async analyzeDocument(fileUrl, mimeType, fileName, query) {
+    return this.analyzeFiles([{
+      url: fileUrl,
+      mimeType,
+      name: fileName
+    }], query);
+  }
+}
+
+// Usage examples
+const analyzer = new FileAnalyzer(process.env.ANSWERR_API_KEY);
+
+// Single document analysis
+const contractAnalysis = await analyzer.analyzeDocument(
+  'https://storage.com/contract.pdf',
+  'application/pdf',
+  'service_contract.pdf',
+  'What are the termination clauses and notice requirements?'
+);
+
+// Multi-file comparison
+const quarterlyComparison = await analyzer.analyzeFiles([
+  { url: 'q3_report.pdf', mimeType: 'application/pdf', name: 'Q3_Report.pdf' },
+  { url: 'q4_report.pdf', mimeType: 'application/pdf', name: 'Q4_Report.pdf' }
+], 'Compare revenue growth and identify key performance changes');
+```
+
+## **Next Steps**
+
+File Analysis works seamlessly with all AnswerrAI features:
+
+- [**Compare Mode**](http://localhost:3001/compare-mode) - Compare how different models interpret your documents
+- [**Auto-Mode**](http://localhost:3001/auto-mode) - Intelligent model selection for optimal file processing
+- [**Sources & Suggestions**](http://localhost:3001/sources-suggestions) - Enhanced analysis with supporting context
+
+Start analyzing files today by uploading your first document and asking questions about its contents. Transform static files into interactive knowledge sources with the File Analysis API.
