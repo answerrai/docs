@@ -22,6 +22,17 @@
             ]
           },
           {
+            "group": "Features",
+            "pages": [
+              "basics",
+              "completion",
+              "analysis",
+              "compare",
+              "automode",
+              "sources"
+            ]
+          },
+          {
             "group": "Essentials",
             "pages": [
               "essentials/markdown",
