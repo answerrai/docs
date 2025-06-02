@@ -1,0 +1,203 @@
+---
+title: "Compare Mode API"
+description: "Compare Mode enables direct comparison between different AI models for the same query. Instead of wondering which model would handle your request better, Compare Mode shows you both responses simultaneously, helping you make data-driven decisions about model selection."
+---
+
+# How Compare Mode Works
+
+### **Parallel Processing**
+
+When you specify a `compareModel`, our system simultaneously sends your request to both models. Each model processes the query independently using their own strengths and approaches, giving you authentic comparisons rather than influenced responses.
+
+### **Universal Compatibility**
+
+Compare Mode works across all AnswerrAI features:
+
+- Standard chat completions
+- File analysis and document processing
+- Auto-Mode intelligent selection
+- Streaming responses
+- Enhanced features like sources and suggestions
+
+## **Basic Usage**
+
+### **Simple Comparison**
+
+```javascript
+const response = await fetch('https://api.answerr.ai/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${YOUR_API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: "gpt-4o",
+    compareModel: "claude-3-5-sonnet",
+    messages: [
+      {
+        role: "user",
+        content: "Explain the benefits of renewable energy"
+      }
+    ]
+  })
+});
+```
+
+### **Response Format**
+
+```javascript
+{
+  "primary": {
+    "model": "gpt-4o",
+    "response": "Renewable energy offers several key advantages...",
+    "usage": { "total_tokens": 156 }
+  },
+  "comparison": {
+    "model": "claude-3-5-sonnet", 
+    "response": "The transition to renewable energy sources brings multiple benefits...",
+    "usage": { "total_tokens": 142 }
+  },
+  "metadata": {
+    "query_type": "informational",
+    "processing_time": {
+      "primary": 2.3,
+      "comparison": 1.8
+    }
+  }
+}
+```
+
+## **When Compare Mode Shines**
+
+### **Model Evaluation**
+
+Perfect for teams evaluating which models work best for their specific use cases. Compare responses across different query types to build a data-driven model selection strategy without complex A/B testing infrastructure.
+
+### **Quality Assurance**
+
+For critical applications, Compare Mode provides an additional verification layer. Cross-check responses between models to identify potential errors, verify factual consistency, or detect biases in AI outputs.
+
+### **Educational Insights**
+
+Compare Mode reveals how different AI architectures approach the same problem. Observe reasoning differences, communication styles, and solution strategies to better understand each model's capabilities and limitations.
+
+### **Content Creation**
+
+When generating important content, see multiple AI perspectives before choosing the best approach. Compare creative styles, technical explanations, or persuasive arguments to select the most effective response.
+
+### **Cost-Benefit Analysis**
+
+Directly compare premium models against more affordable alternatives to determine if the quality difference justifies the cost difference for your specific use cases.
+
+## **Advanced Features**
+
+### **Compare with Auto-Mode**
+
+Let Auto-Mode select the optimal model while comparing against a specific alternative:
+
+```javascript
+{
+  "model": "auto",
+  "compareModel": "gpt-4o",
+  "messages": [...]
+}
+```
+
+This shows you how Auto-Mode's intelligent selection performs against your preferred model choice.
+
+### **File Analysis Comparison**
+
+Compare how different models interpret documents, images, or code files:
+
+```javascript
+{
+  "model": "gpt-4o",
+  "compareModel": "claude-3-5-sonnet",
+  "files": [{ "url": "document.pdf", "mimeType": "application/pdf" }],
+  "input": [{ "role": "user", "content": "Summarize the key findings" }]
+}
+```
+
+## **Business Applications**
+
+### **Customer Support Optimization**
+
+Compare model performance on support tickets to identify which models handle different issue types most effectively. Route simple questions to cost-effective models while using premium models for complex technical issues.
+
+### **Content Strategy**
+
+For marketing and communications teams, Compare Mode reveals which models produce more engaging copy, clearer explanations, or more persuasive arguments for different audiences and purposes.
+
+### **Technical Documentation**
+
+Compare how models explain complex technical concepts. Some excel at beginner-friendly explanations while others provide more comprehensive technical depth—Compare Mode helps you choose the right approach.
+
+### **Research and Analysis**
+
+Academic and business research benefits from multiple AI perspectives on the same data. Compare analytical approaches, hypothesis generation, and insight extraction across different models.
+
+## **Analytics and Insights**
+
+### **Comparison Metrics**
+
+Compare Mode generates valuable analytics:
+
+- **Response quality scores** based on user preferences
+- **Performance differences** in speed and token efficiency
+- **Use case optimization** showing which models excel at specific tasks
+- **Cost-effectiveness analysis** comparing quality-to-price ratios
+
+### **Selection Patterns**
+
+Track which models users prefer for different query types, helping optimize your default model choices and Auto-Mode configuration for your specific application needs.
+
+# Integration Example
+
+```javascript
+class ComparisonChat {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+  }
+
+  async compareModels(messages, primaryModel, compareModel) {
+    const response = await fetch('https://api.answerr.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: primaryModel,
+        compareModel: compareModel,
+        messages,
+        includeSuggestions: true
+      })
+    });
+
+    const result = await response.json();
+    
+    // Log comparison for analytics
+    this.logComparison({
+      primary: result.primary.model,
+      comparison: result.comparison.model,
+      queryType: this.analyzeQueryType(messages),
+      tokenUsage: {
+        primary: result.primary.usage.total_tokens,
+        comparison: result.comparison.usage.total_tokens
+      }
+    });
+
+    return result;
+  }
+}
+```
+
+## **Next Steps**
+
+Compare Mode works seamlessly with all AnswerrAI features:
+
+- [**Auto-Mode**](http://localhost:3001/auto-mode) - Compare Auto-Mode selections with specific models
+- [**File Analysis**](http://localhost:3001/file-analysis) - Compare document interpretation across models
+- [**Sources & Suggestions**](http://localhost:3001/sources-suggestions) - Enhanced comparisons with additional context
+
+Start using Compare Mode today by adding the `compareModel` parameter to your existing requests. No additional integration work required—just instant access to multi-model insights.
