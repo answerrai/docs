@@ -1,0 +1,256 @@
+---
+title: "Sources & Suggestions API"
+description: "The Sources & Suggestions API enhances your AI responses with two powerful features: web-based source verification and intelligent follow-up question generation. Instead of standalone AI responses, get comprehensive answers backed by credible sources and natural conversation continuations."
+---
+
+## **How It Works**
+
+### **Web Sources**
+
+When enabled, the system automatically processes your query to generate search-optimized terms, queries web sources through our search integration, and returns the most relevant and credible results that support the AI's response.
+
+### **Smart Suggestions**
+
+Our suggestion engine analyzes the conversation context and AI response to generate natural follow-up questions that encourage deeper exploration, clarify complex topics, or explore related areas of interest.
+
+## **Basic Usage**
+
+### **Enable Sources and Suggestions**
+
+```javascript
+const response = await fetch('https://api.answerr.ai/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${YOUR_API_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "user",
+        content: "What are the latest developments in quantum computing?"
+      }
+    ],
+    includeSources: true,
+    includeSuggestions: true
+  })
+});
+```
+
+### **Enhanced Response Format**
+
+```javascript
+{
+  "id": "chatcmpl-abc123",
+  "model": "gpt-4o",
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "Recent quantum computing developments include significant breakthroughs in error correction, new qubit technologies, and commercial applications..."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "IBM Achieves Quantum Error Correction Milestone",
+      "url": "https://research.ibm.com/blog/quantum-error-correction-2024",
+      "snippet": "IBM researchers demonstrate a breakthrough in quantum error correction that could enable practical quantum computers...",
+      "domain": "research.ibm.com",
+      "relevance_score": 0.94
+    },
+    {
+      "title": "Google's Quantum AI Makes Major Advance",
+      "url": "https://ai.googleblog.com/quantum-breakthrough",
+      "snippet": "Google's quantum team reports significant progress in quantum supremacy experiments...",
+      "domain": "ai.googleblog.com", 
+      "relevance_score": 0.89
+    }
+  ],
+  "suggestions": [
+    "How do quantum error correction techniques actually work?",
+    "What commercial applications are closest to reality?",
+    "How do IBM and Google's approaches to quantum computing differ?",
+    "What are the main challenges still facing quantum computers?"
+  ]
+}
+```
+
+## **Sources Feature**
+
+### **Intelligent Search Processing**
+
+The system transforms user queries into effective search terms by:
+
+- **Entity extraction**: Identifying key topics and concepts
+- **Query optimization**: Reformulating questions for better search results
+- **Context awareness**: Using conversation history to refine searches
+- **Relevance filtering**: Selecting sources that directly support the AI response
+
+### **Source Quality**
+
+Our search integration prioritizes:
+
+- **Authoritative domains**: Academic institutions, government agencies, established organizations
+- **Recent content**: Prioritizing up-to-date information when timeliness matters
+- **Relevance scoring**: Matching source content to query and response topics
+- **Diversity**: Including multiple perspectives and source types
+
+### **Source Applications**
+
+#### **Fact-Checking and Verification**
+
+Automatically verify claims in AI responses with supporting web sources, helping users validate information and build confidence in AI-generated content.
+
+#### **Research Enhancement**
+
+Transform AI responses into research starting points by providing credible sources for further investigation, academic citations, and expert perspectives.
+
+#### **Current Events and News**
+
+For topics requiring up-to-date information, sources ensure AI responses reflect the latest developments rather than training data cutoffs.
+
+#### **Professional Applications**
+
+Legal, medical, and technical professionals can verify AI suggestions against authoritative sources before making important decisions.
+
+## **Suggestions Feature**
+
+### **Context-Aware Generation**
+
+Suggestions analyze multiple factors:
+
+- **Conversation flow**: Natural progressions from current topics
+- **Complexity levels**: Questions appropriate for the user's apparent expertise
+- **Exploration paths**: Different angles and related topics worth investigating
+- **Clarification needs**: Areas where the AI response might benefit from elaboration
+
+### **Suggestion Types**
+
+#### **Clarifying Questions**
+
+"Can you explain that concept in simpler terms?" "What does [technical term] mean exactly?"
+
+#### **Deeper Exploration**
+
+"What are the implications of this for [related field]?" "How has this changed over the past decade?"
+
+#### **Comparative Analysis**
+
+"How does this compare to [alternative approach]?" "What are the pros and cons of each method?"
+
+#### **Practical Applications**
+
+"How would I implement this in practice?" "What tools or resources would I need?"
+
+### **Suggestion Applications**
+
+#### **Educational Platforms**
+
+Help students explore topics systematically by suggesting logical next questions that build understanding progressively and encourage critical thinking.
+
+#### **Customer Support**
+
+Guide users through troubleshooting processes with intelligent follow-up questions that help identify root causes and explore related issues.
+
+#### **Research and Analysis**
+
+Provide researchers with systematic exploration paths, helping them consider different angles and ensure comprehensive topic coverage.
+
+#### **Content Creation**
+
+Help writers and creators explore topics thoroughly by suggesting angles, perspectives, and details they might not have considered.
+
+## **Advanced Features**
+
+### **Combined with Compare Mode**
+
+```javascript
+{
+  "model": "gpt-4o",
+  "compareModel": "claude-3-5-sonnet",
+  "messages": [...],
+  "includeSources": true,
+  "includeSuggestions": true
+}
+```
+
+Get sources and suggestions for both model responses, allowing comparison of how different models approach fact-checking and conversation flow.
+
+### **Auto-Mode Optimization**
+
+Auto-Mode considers whether sources and suggestions are enabled when selecting models, potentially choosing models that work better with external context and follow-up generation.
+
+## **Implementation Example**
+
+```javascript
+class EnhancedChat {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+    this.conversationHistory = [];
+  }
+
+  async chat(message, options = {}) {
+    // Add user message to history
+    this.conversationHistory.push({
+      role: 'user',
+      content: message
+    });
+
+    const response = await fetch('https://api.answerr.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: options.model || 'auto',
+        messages: this.conversationHistory,
+        includeSources: options.includeSources !== false, // Default true
+        includeSuggestions: options.includeSuggestions !== false,
+        compareModel: options.compareModel
+      })
+    });
+
+    const result = await response.json();
+    
+    // Add assistant response to history
+    this.conversationHistory.push({
+      role: 'assistant',
+      content: result.choices[0].message.content
+    });
+
+    return {
+      response: result.choices[0].message.content,
+      sources: result.sources || [],
+      suggestions: result.suggestions || [],
+      metadata: {
+        model: result.model,
+        hasComparison: !!result.comparison
+      }
+    };
+  }
+
+  // Helper method to ask suggested questions
+  async askSuggestion(suggestionIndex, lastResponse) {
+    if (!lastResponse.suggestions || !lastResponse.suggestions[suggestionIndex]) {
+      throw new Error('Invalid suggestion index');
+    }
+
+    const suggestion = lastResponse.suggestions[suggestionIndex];
+    return this.chat(suggestion);
+  }
+}
+
+// Usage
+const chat = new EnhancedChat(process.env.ANSWERR_API_KEY);
+
+const response = await chat.chat("Explain machine learning algorithms");
+console.log("Response:", response.response);
+console.log("Sources:", response.sources);
+console.log("Suggestions:", response.suggestions);
+
+// Follow up with a suggested question
+const followUp = await chat.askSuggestion(0, response);
+```
