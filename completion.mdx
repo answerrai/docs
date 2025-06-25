@@ -3,7 +3,6 @@ title: "Chat Completion Endpoint"
 description: "The Chat Completions API is your gateway to conversational AI. This single endpoint provides access to all major AI models through a unified interface, eliminating the complexity of managing multiple provider integrations while preserving each model's unique capabilities."
 ---
 
-
 ## Create a Chat Completion
 
 Endpoint: `POST /v1/chat/completions`
@@ -13,7 +12,7 @@ This is the only endpoint you need to remember. Everything else is just paramete
 **Simple Request:**
 
 ```javascript
-curl -X POST https://api.answerr.ai/v1/chat/completions \
+curl -X POST https://connect.answerr.ai/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
